@@ -1,0 +1,30 @@
+name: Submit Application to B12
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    env:
+      APPLICANT_NAME: "Sagini Abenga"
+      APPLICANT_EMAIL: "samsonsagini@gmail.com"
+      RESUME_LINK: "https://resume.io/r/z4aKppONL"
+      REPOSITORY_LINK: "${{ github.server_url }}/${{ github.repository }}"
+      ACTION_RUN_LINK: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Submit application
+        run: python submit.py
