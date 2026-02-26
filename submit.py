@@ -27,13 +27,6 @@ def main():
     digest = hmac.new(signing_secret, body, hashlib.sha256).hexdigest()
     signature = f"sha256={digest}"
 
-    print(
-        f"POST https://b12.io/apply/submission"
-        f" -H 'Content-Type: application/json'"
-        f" -H 'X-Signature-256: {signature}'"
-        f" -d '{body.decode()}'"
-    )
-
     req = urllib.request.Request(
         "https://b12.io/apply/submission",
         data=body,
@@ -44,13 +37,13 @@ def main():
         method="POST",
     )
 
-    # try:
-    #     with urllib.request.urlopen(req) as response:
-    #         result = json.loads(response.read().decode("utf-8"))
-    #         print(f"Submission receipt: {result['receipt']}")
-    # except urllib.error.HTTPError as e:
-    #     body_text = e.read().decode("utf-8")
-    #     raise SystemExit(f"HTTP {e.code}: {body_text}") from e
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            print(f"Submission: {result}")
+    except urllib.error.HTTPError as e:
+        body_text = e.read().decode("utf-8")
+        raise SystemExit(f"HTTP {e.code}: {body_text}") from e
 
 
 if __name__ == "__main__":
